@@ -83,6 +83,10 @@ param(
     [PSCredential]
     $DomainCCred = (Get-Credential -Message 'DomainC credential')
 )
+    $CurrentHostVersion=((Get-CimInstance -ClassName CIM_OperatingSystem).Version).Split('.')
+    If(($CurrentHostVersion[0] -lt 6) -or (($CurrentHostVersion[0] -eq 6) -and ($CurrentHostVersion[1] -le 1)))
+    {Throw 'Windows 8 is the minimum required version to run this cmdlet!'} 
+    
     Set-ADComputer -Identity $ServerC.Substring(0,$ServerC.IndexOf('.')) -Credential $DomainCCred -Server $ServerC.Substring($ServerC.IndexOf('.')+1) -PrincipalsAllowedToDelegateToAccount $null
 }
 
@@ -140,6 +144,10 @@ param(
     [PSCredential]
     $DomainCCred
 )
+    $CurrentHostVersion=((Get-CimInstance -ClassName CIM_OperatingSystem).Version).Split('.')
+    If(($CurrentHostVersion[0] -lt 6) -or (($CurrentHostVersion[0] -eq 6) -and ($CurrentHostVersion[1] -le 1)))
+    {Throw 'Windows 8 is the minimum required version to run this cmdlet!'} 
+    
     If (!$PSBoundParameters.ContainsKey('DomainCCred')) {$DomainCCred = $DomainBCred = $Credential}
 
     # Split out the hostname and domain name portions of the FQDN where appropriate
